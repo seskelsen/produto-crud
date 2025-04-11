@@ -16,13 +16,14 @@ Para instalar e executar o projeto em sua máquina local, siga estas etapas:
 
 1. **Clone o repositório**
    ```bash
-   git clone https://github.com/seu-usuario/produto-crud.git
+   git clone https://github.com/seskelsen/produto-crud.git
    cd produto-crud
    ```
 
 2. **Instale as dependências**
    ```bash
    composer install
+   npm install
    ```
 
 3. **Configure o ambiente**
@@ -40,17 +41,22 @@ Para instalar e executar o projeto em sua máquina local, siga estas etapas:
    php artisan migrate
    ```
 
-6. **Inicie o servidor de desenvolvimento**
+6. **Compile os assets**
+   ```bash
+   npm run dev
+   ```
+
+7. **Inicie o servidor de desenvolvimento**
    ```bash
    php artisan serve
    ```
 
-7. **Acesse a aplicação**
+8. **Acesse a aplicação**
    - Abra o navegador e acesse: http://localhost:8000
 
 ## Sobre o projeto
 
-Este projeto apresenta uma aplicação CRUD (Create, Read, Update, Delete) para gerenciar produtos, conforme solicitado no teste prático. A aplicação foi construída utilizando Laravel no backend e JavaScript puro com jQuery no frontend, com o objetivo de demonstrar minhas habilidades em desenvolvimento web full-stack.
+Este projeto apresenta uma aplicação CRUD (Create, Read, Update, Delete) para gerenciar produtos, conforme solicitado no teste prático. A aplicação foi inicialmente construída utilizando Laravel no backend e jQuery no frontend, e posteriormente refatorada para utilizar Vue.js, demonstrando conhecimento em ambas as abordagens.
 
 ## Tecnologias Utilizadas
 
@@ -62,9 +68,9 @@ Este projeto apresenta uma aplicação CRUD (Create, Read, Update, Delete) para 
 
 - **Frontend**:
   - HTML5, CSS3
-  - JavaScript
-  - jQuery (para manipulação DOM e requisições AJAX)
+  - Vue.js 3 (utilizando Composition API)
   - Bootstrap 5 (framework CSS)
+  - Axios (para requisições HTTP)
 
 ## Processo de Desenvolvimento
 
@@ -115,153 +121,49 @@ class Produto extends Model
 
 ### 3. Validação de Dados
 
-Implementei a validação dos dados utilizando o Laravel Form Request, seguindo as boas práticas recomendadas para o framework. Isso permite uma validação robusta e fácil manutenção:
-
-```php
-// ProdutoRequest para validação
-class ProdutoRequest extends FormRequest
-{
-    public function authorize(): bool
-    {
-        return true;
-    }
-
-    public function rules(): array
-    {
-        return [
-            'nome' => 'required|string|max:255',
-            'descricao' => 'nullable|string',
-            'preco' => 'required|numeric|min:0|decimal:0,2',
-            'categoria' => 'nullable|string|max:100'
-        ];
-    }
-    
-    public function messages(): array
-    {
-        return [
-            'nome.required' => 'O nome do produto é obrigatório',
-            'preco.required' => 'O preço do produto é obrigatório',
-            'preco.numeric' => 'O preço deve ser um valor numérico',
-            'preco.min' => 'O preço não pode ser negativo',
-            'preco.decimal' => 'O preço deve ter no máximo duas casas decimais',
-        ];
-    }
-}
-```
+Implementei a validação dos dados utilizando o Laravel Form Request, seguindo as boas práticas recomendadas para o framework. Isso permite uma validação robusta e fácil manutenção.
 
 ### 4. Controladores e Rotas API
 
-Implementei o controlador `ProdutoController` para gerenciar todas as operações CRUD, seguindo os princípios REST:
+Implementei o controlador `ProdutoController` para gerenciar todas as operações CRUD, seguindo os princípios REST.
 
-```php
-// Controlador para produtos
-class ProdutoController extends Controller
-{
-    public function index()
-    {
-        $produtos = Produto::paginate(10);
-        return response()->json($produtos);
-    }
+### 5. Interface Frontend com Vue.js
 
-    public function store(ProdutoRequest $request)
-    {
-        $produto = Produto::create($request->validated());
-        return response()->json($produto, 201);
-    }
+Desenvolvi a interface frontend utilizando Vue.js 3 com Composition API para uma melhor organização e reatividade do código. A aplicação foi estruturada em componentes:
 
-    public function show(string $id)
-    {
-        $produto = Produto::findOrFail($id);
-        return response()->json($produto);
-    }
-
-    public function update(ProdutoRequest $request, string $id)
-    {
-        $produto = Produto::findOrFail($id);
-        $produto->update($request->validated());
-        return response()->json($produto);
-    }
-
-    public function destroy(string $id)
-    {
-        $produto = Produto::findOrFail($id);
-        $produto->delete();
-        return response()->json(null, 204);
-    }
-}
-```
-
-Configurei as rotas da API para acessar os métodos do controlador:
-
-```php
-// Rotas da API
-Route::prefix('api')->group(function () {
-    Route::get('/produtos', [ProdutoController::class, 'index']);
-    Route::post('/produtos', [ProdutoController::class, 'store']);
-    Route::get('/produtos/{id}', [ProdutoController::class, 'show']);
-    Route::put('/produtos/{id}', [ProdutoController::class, 'update']);
-    Route::delete('/produtos/{id}', [ProdutoController::class, 'destroy']);
-});
-```
-
-### 5. Interface Frontend
-
-Desenvolvi a interface frontend utilizando Bootstrap para garantir um design responsivo e moderno. Optei por utilizar jQuery para simplificar as manipulações DOM e requisições AJAX, já que é uma biblioteca amplamente adotada e com excelente documentação.
-
-A estrutura da interface inclui:
-- Uma tabela para listagem de produtos
-- Modal para adicionar/editar produtos
-- Modal de confirmação para exclusão
-- Feedback visual para erros de validação
+- **ProdutoApp.vue**: Componente principal que gerencia o estado da aplicação
+- **ListaProdutos.vue**: Exibe a tabela de produtos
+- **FormProduto.vue**: Formulário para criar e editar produtos
+- **ModalConfirmacao.vue**: Modal para confirmar exclusão
 
 #### Justificativa das escolhas:
 
-- **Bootstrap 5**: Escolhi o Bootstrap pela sua robustez, documentação e facilidade de uso para criar interfaces responsivas. Ele permite criar uma interface profissional e adaptável a diferentes dispositivos rapidamente.
+- **Vue.js 3**: Escolhi o Vue.js por sua facilidade de integração com o Laravel, sua curva de aprendizado suave e sua poderosa reatividade. A Composition API proporciona um código mais organizado e reutilizável.
 
-- **jQuery**: Mesmo com a ascensão de frameworks modernos como React e Vue, optei pelo jQuery por sua simplicidade e adequação ao escopo do projeto. Para uma aplicação CRUD simples como esta, o jQuery oferece todas as funcionalidades necessárias sem adicionar complexidade desnecessária.
+- **Bootstrap 5**: Mantive o Bootstrap pela sua robustez, documentação e facilidade de uso para criar interfaces responsivas.
+
+- **Componentização**: A divisão em componentes Vue permite um código mais manutenível e organizado, seguindo princípios SOLID.
 
 ### 6. Comunicação com a API
 
-Implementei a comunicação com a API utilizando Ajax via jQuery, seguindo boas práticas como:
-- Configuração do token CSRF para requisições seguras
-- Tratamento adequado de erros
-- Feedback visual para o usuário
+Implementei a comunicação com a API utilizando Axios, configurado para incluir automaticamente o token CSRF:
 
 ```javascript
-// Exemplo de requisição para carregar produtos
-function carregarProdutos() {
-    $.ajax({
-        url: '/api/produtos',
-        type: 'GET',
-        success: function(response) {
-            renderizarTabela(response.data);
-        },
-        error: function(xhr) {
-            console.error('Erro ao carregar produtos:', xhr);
-            alert('Erro ao carregar os produtos. Por favor, tente novamente.');
-        }
-    });
-}
+// Exemplo de requisição com Axios
+const loadProdutos = async () => {
+  try {
+    const response = await axios.get('/api/produtos');
+    produtos.value = response.data.data || response.data;
+  } catch (error) {
+    console.error('Erro ao carregar produtos:', error);
+    alert('Erro ao carregar os produtos. Por favor, tente novamente.');
+  }
+};
 ```
 
 ### 7. Validação no Frontend
 
-Além da validação no backend, implementei validação no frontend para melhorar a experiência do usuário:
-- Validação de campos obrigatórios
-- Feedback visual imediato para erros
-- Exibição adequada das mensagens de erro retornadas pelo servidor
-
-```javascript
-// Exemplo de validação e exibição de erros
-if (xhr.status === 422) {
-    // Exibir erros de validação
-    const errors = xhr.responseJSON.errors;
-    for (const field in errors) {
-        $(`#${field}`).addClass('is-invalid');
-        $(`#${field}Error`).text(errors[field][0]);
-    }
-}
-```
+Além da validação no backend, implementei validação no frontend para melhorar a experiência do usuário, oferecendo feedback imediato sobre erros.
 
 ## Considerações sobre o Desenvolvimento
 
@@ -273,10 +175,11 @@ if (xhr.status === 422) {
    - ORM Eloquent facilita a interação com o banco de dados
    - Recursos integrados para validação, middleware e segurança
 
-2. **Abordagem tradicional com jQuery no frontend**:
-   - Simplicidade e eficácia para projetos de menor escopo
-   - Fácil integração com Bootstrap para design responsivo
-   - Menor curva de aprendizado comparado a frameworks SPA
+2. **Vue.js para o frontend**:
+   - Excelente integração com Laravel
+   - Componentização para melhor organização do código
+   - Reatividade eficiente para melhor experiência do usuário
+   - Composition API para melhor gerenciamento de estado
 
 3. **Estrutura do código**:
    - Separação clara entre backend (API) e frontend (interface)
@@ -288,7 +191,7 @@ if (xhr.status === 422) {
 Se este projeto fosse evoluir para uma aplicação maior, eu consideraria as seguintes melhorias:
 
 1. **Autenticação e autorização**: Implementar JWT para autenticação na API
-2. **Framework frontend moderno**: Migrar para Vue.js ou React para melhor gerenciamento de estado
-3. **Testes automatizados**: Adicionar testes unitários e de integração
+2. **Pinia ou Vuex**: Adicionar gerenciamento de estado mais robusto para aplicações maiores
+3. **Testes automatizados**: Adicionar testes unitários e de integração (Vue Test Utils, Jest)
 4. **Documentação da API**: Implementar Swagger/OpenAPI para documentar a API
-5. **Cache e otimização**: Implementar cache para melhorar performance
+5. **Otimização de performance**: Implementar lazy loading para componentes Vue
