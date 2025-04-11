@@ -6,9 +6,10 @@
 1. [Instalação](#instalação)
 2. [Sobre o projeto](#sobre-o-projeto)
 3. [Tecnologias utilizadas](#tecnologias-utilizadas)
-4. [Processo de desenvolvimento](#processo-de-desenvolvimento)
-5. [Considerações sobre o desenvolvimento](#considerações-sobre-o-desenvolvimento)
-6. [Possíveis melhorias](#possíveis-melhorias-futuras)
+4. [Documentação da API](#documentação-da-api)
+5. [Processo de desenvolvimento](#processo-de-desenvolvimento)
+6. [Considerações sobre o desenvolvimento](#considerações-sobre-o-desenvolvimento)
+7. [Possíveis melhorias](#possíveis-melhorias-futuras)
 
 ## Instalação
 
@@ -46,13 +47,19 @@ Para instalar e executar o projeto em sua máquina local, siga estas etapas:
    npm run dev
    ```
 
-7. **Inicie o servidor de desenvolvimento**
+7. **Gere a documentação da API**
+   ```bash
+   php artisan l5-swagger:generate
+   ```
+
+8. **Inicie o servidor de desenvolvimento**
    ```bash
    php artisan serve
    ```
 
-8. **Acesse a aplicação**
-   - Abra o navegador e acesse: http://localhost:8000
+9. **Acesse a aplicação**
+   - Interface do CRUD: http://localhost:8000
+   - Documentação da API: http://localhost:8000/api/documentation
 
 ## Sobre o projeto
 
@@ -65,12 +72,35 @@ Este projeto apresenta uma aplicação CRUD (Create, Read, Update, Delete) para 
   - MySQL (banco de dados)
   - Laravel Form Request (validação)
   - API RESTful
+  - OpenAPI/Swagger (documentação da API)
 
 - **Frontend**:
   - HTML5, CSS3
   - Vue.js 3 (utilizando Composition API)
   - Bootstrap 5 (framework CSS)
   - Axios (para requisições HTTP)
+
+## Documentação da API
+
+Uma das características diferenciais deste projeto é a implementação de documentação completa da API utilizando o padrão OpenAPI (Swagger), que permite:
+
+- **Documentação interativa**: Interface visual para explorar todos os endpoints da API
+- **Testes em tempo real**: Possibilidade de testar as requisições diretamente pela interface Swagger
+- **Documentação detalhada**: Descrição completa de todos os endpoints, parâmetros, respostas e modelos de dados
+
+Para acessar a documentação da API, com o projeto em execução, navegue para:
+```
+http://localhost:8000/api/documentation
+```
+
+### Benefícios da documentação OpenAPI
+
+1. **Facilita a integração**: Outros desenvolvedores podem entender rapidamente como utilizar a API
+2. **Documentação sempre atualizada**: As anotações no código garantem que a documentação esteja sempre sincronizada com a implementação
+3. **Testabilidade**: Permite testar os endpoints sem necessidade de ferramentas externas como Postman
+4. **Padrão da indústria**: Segue o padrão OpenAPI, amplamente adotado na indústria para documentação de APIs
+
+A documentação foi implementada usando o pacote `darkaonline/l5-swagger` e as anotações foram adicionadas diretamente no código dos controladores e modelos, seguindo as melhores práticas.
 
 ## Processo de Desenvolvimento
 

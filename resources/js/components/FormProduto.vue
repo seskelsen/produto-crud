@@ -12,7 +12,7 @@
             <button type="button" class="btn-close" @click="$emit('close')"></button>
           </div>
           <div class="modal-body">
-            <form>
+            <form @submit.prevent="handleSubmit">
               <div class="mb-3">
                 <label for="nome" class="form-label">Nome</label>
                 <input 
@@ -54,7 +54,7 @@
                   class="form-control" 
                   :class="{ 'is-invalid': errors.preco }"
                   id="preco" 
-                  v-model="form.preco" 
+                  v-model.number="form.preco" 
                   step="0.01" 
                   required
                 >
@@ -104,7 +104,13 @@ export default {
       form.nome = newProduto.nome || '';
       form.descricao = newProduto.descricao || '';
       form.categoria = newProduto.categoria || '';
-      form.preco = newProduto.preco || '';
+      
+      // Formato simplificado para evitar conversões desnecessárias
+      if (newProduto.preco) {
+        form.preco = Number(newProduto.preco);
+      } else {
+        form.preco = '';
+      }
       
       // Limpa erros quando o formulário muda
       Object.keys(errors).forEach(key => {
@@ -135,22 +141,36 @@ export default {
         isValid = false;
       }
       
-      if (!form.preco) {
+      if (form.preco === '' || form.preco === null || form.preco === undefined) {
         errors.preco = ['O preço do produto é obrigatório'];
         isValid = false;
-      } else if (isNaN(form.preco) || parseFloat(form.preco) < 0) {
+      } else if (isNaN(Number(form.preco)) || Number(form.preco) < 0) {
         errors.preco = ['O preço deve ser um valor numérico positivo'];
         isValid = false;
       }
       
       if (!isValid) return;
       
-      // Enviar para o componente pai
-      const resultado = await emit('save', { ...form });
+      // Preparação mais direta dos dados - evita múltiplas conversões
+      const dadosProduto = {
+        id: form.id,
+        nome: form.nome,
+        descricao: form.descricao,
+        categoria: form.categoria,
+        // Converte diretamente para número e limita a 2 casas decimais
+        preco: Number(Number(form.preco).toFixed(2))
+      };
       
-      // Se houver erros de validação do servidor
-      if (resultado) {
-        Object.assign(errors, resultado);
+      try {
+        // Enviar para o componente pai
+        const resultado = await emit('save', dadosProduto);
+        
+        // Se houver erros de validação do servidor
+        if (resultado) {
+          Object.assign(errors, resultado);
+        }
+      } catch (error) {
+        console.error('Erro ao salvar produto:', error);
       }
     };
 

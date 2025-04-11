@@ -16,32 +16,14 @@ class ProdutoRequest extends FormRequest
 
     /**
      * Get the validation rules that apply to the request.
-     *
-     * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
         return [
             'nome' => 'required|string|max:255',
             'descricao' => 'nullable|string',
-            'preco' => 'required|numeric|min:0|decimal:0,2',
-            'categoria' => 'nullable|string|max:100'
-        ];
-    }
-    
-    /**
-     * Get custom messages for validator errors.
-     *
-     * @return array
-     */
-    public function messages(): array
-    {
-        return [
-            'nome.required' => 'O nome do produto é obrigatório',
-            'preco.required' => 'O preço do produto é obrigatório',
-            'preco.numeric' => 'O preço deve ser um valor numérico',
-            'preco.min' => 'O preço não pode ser negativo',
-            'preco.decimal' => 'O preço deve ter no máximo duas casas decimais',
+            'preco' => 'required|numeric|min:0',
+            'categoria' => 'nullable|string|max:255',
         ];
     }
 }

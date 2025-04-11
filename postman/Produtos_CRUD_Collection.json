@@ -1,0 +1,141 @@
+{
+  "info": {
+    "name": "Produtos CRUD API",
+    "description": "Collection para testar as funcionalidades da API de Produtos",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Listar todos os produtos",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8000/api/produtos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "produtos"]
+        },
+        "description": "Retorna a lista de todos os produtos cadastrados, com paginação"
+      },
+      "response": []
+    },
+    {
+      "name": "Obter um produto específico",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "http://localhost:8000/api/produtos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "produtos", "1"]
+        },
+        "description": "Retorna os detalhes de um produto específico pelo ID"
+      },
+      "response": []
+    },
+    {
+      "name": "Criar um novo produto",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "http://localhost:8000/api/produtos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "produtos"]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Produto Exemplo\",\n    \"descricao\": \"Esta é uma descrição detalhada do produto exemplo\",\n    \"preco\": 99.99,\n    \"categoria\": \"Eletrônicos\"\n}"
+        },
+        "description": "Cria um novo produto com os dados fornecidos"
+      },
+      "response": []
+    },
+    {
+      "name": "Atualizar um produto",
+      "request": {
+        "method": "PUT",
+        "url": {
+          "raw": "http://localhost:8000/api/produtos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "produtos", "1"]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"nome\": \"Produto Atualizado\",\n    \"descricao\": \"Descrição atualizada do produto\",\n    \"preco\": 129.99,\n    \"categoria\": \"Eletrônicos Premium\"\n}"
+        },
+        "description": "Atualiza os dados de um produto existente pelo ID"
+      },
+      "response": []
+    },
+    {
+      "name": "Excluir um produto",
+      "request": {
+        "method": "DELETE",
+        "url": {
+          "raw": "http://localhost:8000/api/produtos/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "produtos", "1"]
+        },
+        "description": "Remove um produto pelo ID"
+      },
+      "response": []
+    },
+    {
+      "name": "Produtos - Criação com Dados Inválidos",
+      "request": {
+        "method": "POST",
+        "url": {
+          "raw": "http://localhost:8000/api/produtos",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "8000",
+          "path": ["api", "produtos"]
+        },
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          },
+          {
+            "key": "Accept",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"descricao\": \"Este produto não tem nome nem preço, então a validação deve falhar\",\n    \"categoria\": \"Teste de Validação\"\n}"
+        },
+        "description": "Tenta criar um produto com dados inválidos para testar a validação"
+      },
+      "response": []
+    }
+  ]
+}
